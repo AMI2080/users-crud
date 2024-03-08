@@ -1,0 +1,49 @@
+<div class="flex align-content-center align-items-center min-h-[100vh] w-full bg-teal-50">
+  <form [formGroup]="loginForm" (ngSubmit)="submitLogin()"
+    class="block mx-auto min-w-96 border-[1px] border-teal-900 rounded overflow-hidden bg-teal-200 m-12 p-4">
+    <div class="relative mb-2 pb-4">
+      <label for="username" class="form-label">
+        {{ 'translate_username' | translate }}
+      </label>
+      <input type="text" formControlName="username" class="block w-full p-2 border-2 rounded outline-0" id="username"
+        [placeholder]="'translate_enter_username' | translate" autofocus
+        [ngClass]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched ? 'border-red-500' : 'border-teal-500 hover:border-teal-800 focus-within:border-teal-800'" />
+      <div
+        *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid && loginForm.get('username')?.hasError('required')"
+        class="absolute bottom-0 text-sm text-red-500">
+        {{ 'translate_username_required' | translate }}
+      </div>
+      <div
+        *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid && (loginForm.get('username')?.hasError('minlength') || loginForm.get('username')?.hasError('maxlength'))"
+        class="absolute bottom-0 text-sm text-red-500">
+        {{ 'translate_username_invalid' | translate }}
+      </div>
+    </div>
+    <div class="relative mb-2 pb-4">
+      <label for="password" class="form-label">
+        {{ 'translate_password' | translate }}
+      </label>
+      <input type="password" formControlName="password" class="block w-full p-2 border-2 rounded outline-0"
+        id="password" [placeholder]="'translate_enter_password' | translate"
+        [ngClass]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched ? 'border-red-500' : 'border-teal-500 hover:border-teal-800 focus-within:border-teal-800'" />
+      <div
+        *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid && loginForm.get('password')?.hasError('required')"
+        class="absolute bottom-0 text-sm text-red-500">
+        {{ 'translate_password_required' | translate }}
+      </div>
+      <div
+        *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid && (loginForm.get('password')?.hasError('minlength') || loginForm.get('password')?.hasError('maxlength'))"
+        class="absolute bottom-0 text-sm text-red-500">
+        {{ 'translate_password_invalid' | translate }}
+      </div>
+    </div>
+    <div class="text-center">
+      <button type="submit"
+        class="bg-teal-700 hover:bg-teal-800 focus-within:bg-teal-800 disabled:bg-teal-500 disabled:cursor-not-allowed text-white py-2 px-4 rounded"
+        [disabled]="isSubmitting">
+        <fa-icon *ngIf="isSubmitting" [icon]="['fas', 'spinner']" [animation]="'spin-pulse'" class="me-2"></fa-icon>
+        {{ 'translate_login' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

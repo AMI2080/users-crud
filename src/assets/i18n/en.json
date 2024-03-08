@@ -1,0 +1,13 @@
+{
+  "translate_app_title": "Beetleware",
+  "translate_login": "Login",
+  "translate_username": "Username",
+  "translate_password": "Password",
+  "translate_enter_username": "Enter Username",
+  "translate_enter_password": "Enter Password",
+  "translate_username_required": "Username is required",
+  "translate_username_invalid": "Username is invalid",
+  "translate_password_required": "Password is required",
+  "translate_password_invalid": "Password is invalid",
+  "translate_credentials_are_invalid": "Username or Password is invalid"
+}
