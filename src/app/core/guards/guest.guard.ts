@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 export class GuestGuard {
-  constructor(
+  public constructor(
     private readonly authService: AuthService,
     private readonly router: Router
   ) {}

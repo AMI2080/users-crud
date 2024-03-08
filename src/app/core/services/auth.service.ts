@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 interface AuthResponse {
@@ -13,13 +14,19 @@ interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  public isLogin: boolean = false;
-
-  public userType: 'admin' | 'user' | undefined = undefined;
-
   private resposeTime: number = 2; // In seconds
 
+  private isLogin: boolean = false;
+
+  public get userType(): 'admin' | 'user' | undefined {
+    return this.type;
+  }
+
+  private type: 'admin' | 'user' | undefined = undefined;
+
   private storageName: string = 'auth';
+
+  public constructor(private readonly router: Router) {}
 
   public login(credentials: {
     username: string;
@@ -29,18 +36,18 @@ export class AuthService {
       setTimeout(() => {
         if (credentials.password == '123456') {
           if (credentials.username === 'admin') {
-            this.userType = 'admin';
+            this.type = 'admin';
           } else if (credentials.username === 'user') {
-            this.userType = 'user';
+            this.type = 'user';
           }
           this.isLogin = true;
         }
-        if (this.isLogin && this.userType !== undefined) {
-          localStorage.setItem(this.storageName, `${this.userType}`);
+        if (this.isLogin && this.type !== undefined) {
+          localStorage.setItem(this.storageName, `${this.type}`);
           observer.next({
             message: 'login_successfully',
             status: 100,
-            data: { type: this.userType },
+            data: { type: this.type },
           });
         } else {
           this.logout();
@@ -60,7 +67,10 @@ export class AuthService {
     );
   }
 
-  public logout(): void {
-    return localStorage.removeItem(this.storageName);
+  public logout(): Observable<void> {
+    return new Observable((observer) => {
+      localStorage.removeItem(this.storageName);
+      observer.next();
+    });
   }
 }

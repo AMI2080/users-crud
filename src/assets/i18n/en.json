@@ -1,6 +1,10 @@
 {
   "translate_app_title": "Beetleware",
+  "translate_home_page": "Home",
+  "translate_users_page": "Users",
   "translate_login": "Login",
+  "translate_logout": "Logout",
+  "translate_edit_profile": "Edit profile",
   "translate_username": "Username",
   "translate_password": "Password",
   "translate_enter_username": "Enter Username",

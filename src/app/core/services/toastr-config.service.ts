@@ -5,9 +5,9 @@ import { ToastrService } from 'ngx-toastr';
   providedIn: 'root',
 })
 export class ToastrConfigService {
-  constructor(private toastr: ToastrService) {}
+  public constructor(private toastr: ToastrService) {}
 
-  setToastrDirection(dir: 'rtl' | 'ltr'): void {
+  public setToastrDirection(dir: 'rtl' | 'ltr'): void {
     if (dir === 'rtl') {
       this.toastr.toastrConfig.positionClass = 'toast-top-left';
     } else {

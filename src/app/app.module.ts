@@ -13,17 +13,18 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrConfigService } from './core/services/toastr-config.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppComponent } from './app.component';
 import {
   LayoutComponent,
   HeaderComponent,
   FooterComponent,
 } from './components/layout';
+import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrConfigService } from './core/services/toastr-config.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/i18n/', '.json');
@@ -35,6 +36,7 @@ function HttpLoaderFactory(http: HttpClient) {
     LayoutComponent,
     HeaderComponent,
     FooterComponent,
+    HomeComponent,
     LoginComponent,
   ],
   imports: [

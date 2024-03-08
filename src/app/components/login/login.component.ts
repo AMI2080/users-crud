@@ -15,12 +15,12 @@ export class LoginComponent {
 
   public isSubmitting: boolean = false;
 
-  constructor(
+  public constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly translateService: TranslateService,
     private readonly toastr: ToastrService,
-    private readonly fa: FaIconLibrary
+    readonly fa: FaIconLibrary
   ) {
     this.initLoginForm();
     fa.addIcons(faSpinner);
