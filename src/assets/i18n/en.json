@@ -13,5 +13,6 @@
   "translate_username_invalid": "Username is invalid",
   "translate_password_required": "Password is required",
   "translate_password_invalid": "Password is invalid",
-  "translate_credentials_are_invalid": "Username or Password is invalid"
+  "translate_credentials_are_invalid": "Username or Password is invalid",
+  "translate_footer": "Copyright © {{year}} All rights reserved | Abdelrhman Mohamed"
 }

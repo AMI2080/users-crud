@@ -1,9 +1,10 @@
-<div class="fixed w-full h-16 bg-teal-700 shadow-sm">
+<div class="fixed w-full h-16 z-10 bg-teal-700 shadow-sm">
   <div class="container h-full flex align-items-center">
-    <img src="assets/logo.png" class="h-6" />
+    <img src="assets/logo.png" class="h-6 hidden md:block" />
+    <img src="assets/logo-sm.png" class="h-6 md:hidden" />
     <div class="ltr:text-end rtl:text-end flex-1">
       <ul
-        class="[&_li]:inline-block [&_li]:mx-2 text-teal-100 [&_li:hover]:text-teal-300 cursor-pointer [&_li]:px-2 [&_li]:leading-[3.75rem] [&_li]:border-b-4 [&_li]:border-transparent [&_li:hover]:border-teal-300">
+        class="[&_li]:inline-block mx-2 text-teal-100 [&_li:hover]:text-teal-300 cursor-pointer [&_li]:px-4 [&_li]:leading-[3.75rem] [&_li]:border-b-4 [&_li]:border-transparent [&_li:hover]:border-teal-300">
         <li [routerLink]="['']" routerLinkActive="text-teal-300 bg-white/5" [routerLinkActiveOptions]="{exact: true}">
           {{ 'translate_home_page' | translate }}
         </li>

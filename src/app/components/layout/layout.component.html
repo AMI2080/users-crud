@@ -1,7 +1,9 @@
 <app-header></app-header>
-<div class="min-h-[100vh] pt-16 bg-teal-100">
+<div class="relative min-h-[100vh] pt-16 pb-8 bg-teal-100">
   <div class="container">
     <ng-content></ng-content>
   </div>
+  <div class="absolute bottom-0 w-full">
+    <app-footer></app-footer>
+  </div>
 </div>
-<app-footer></app-footer>
