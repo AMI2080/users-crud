@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -71,6 +71,31 @@ export class UserService {
       );
       if (user) {
         user.status = 'active';
+        observer.next(true);
+      } else {
+        observer.next(false);
+      }
+    });
+  }
+
+  public create(updatedUser: User): Observable<boolean> {
+    return new Observable((observer) => {
+      const maxId = this.users.reduce(
+        (maxId, user) => (maxId = maxId > user.id ? maxId : user.id),
+        0
+      );
+      this.users.push({ ...updatedUser, id: maxId + 1, status: 'active' });
+      observer.next(true);
+    });
+  }
+
+  public update(updatedUser: User): Observable<boolean> {
+    return new Observable((observer) => {
+      const userIndex: number = this.users.findIndex(
+        (user) => user.id === updatedUser.id
+      );
+      if (userIndex >= 0) {
+        this.users[userIndex] = { ...this.users[userIndex], ...updatedUser };
         observer.next(true);
       } else {
         observer.next(false);

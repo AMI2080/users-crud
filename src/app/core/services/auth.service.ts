@@ -18,9 +18,18 @@ export class AuthService {
 
   private isLogin: boolean = false;
 
+  public get userName(): string {
+    return this.users.find((user) => user.type === this.type)?.name ?? '';
+  }
+
   public get userType(): 'admin' | 'user' | undefined {
     return this.type;
   }
+
+  private users: { type: string; name: string }[] = [
+    { type: 'admin', name: 'Admin' },
+    { type: 'user', name: 'User' },
+  ];
 
   private type: 'admin' | 'user' | undefined = undefined;
 
@@ -62,9 +71,24 @@ export class AuthService {
   }
 
   public check(): Observable<boolean> {
-    return of(
-      ['admin', 'user'].includes(localStorage.getItem(this.storageName))
-    );
+    return new Observable((observable) => {
+      switch (localStorage.getItem(this.storageName)) {
+        case 'admin':
+          this.type = 'admin';
+          observable.next(true);
+          break;
+
+        case 'user':
+          this.type = 'user';
+          observable.next(true);
+          break;
+
+        default:
+          this.type = undefined;
+          observable.next(false);
+          break;
+      }
+    });
   }
 
   public logout(): Observable<void> {

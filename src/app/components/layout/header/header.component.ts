@@ -21,6 +21,8 @@ interface Language {
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
+  public userName: string;
+
   public languages: Language[] = [
     {
       key: 'en',
@@ -35,11 +37,13 @@ export class HeaderComponent {
   ];
 
   public constructor(
-    private readonly authService: AuthService,
     private readonly translateService: TranslateService,
     private readonly router: Router,
+    readonly authService: AuthService,
     readonly fa: FaIconLibrary
   ) {
+    this.userName = authService.userName;
+
     fa.addIcons(faUser, faAddressCard, faArrowRightFromBracket, faGlobe);
   }
 

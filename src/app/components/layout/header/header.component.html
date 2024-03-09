@@ -14,8 +14,7 @@
       </ul>
     </div>
     <div ngbDropdown #langMenu="ngbDropdown" placement="bottom-end" class="ms-2">
-      <div ngbDropdownToggle
-        class="rounded-full h-8 w-8 flex align-items-center cursor-pointer after:hidden"
+      <div ngbDropdownToggle class="rounded-full h-8 w-8 flex align-items-center cursor-pointer after:hidden"
         [ngClass]="langMenu.isOpen() ? 'bg-teal-400' : 'bg-teal-300 hover:bg-teal-400' ">
         <fa-icon [icon]="['fas', 'globe']" [size]="'lg'" [fixedWidth]="true"
           class="w-full text-center text-teal-900"></fa-icon>
@@ -37,7 +36,7 @@
             class="w-full text-center text-teal-900"></fa-icon>
         </div>
         <div class="flex align-items-center ltr:pe-3 rtl:pe-3">
-          {{ 'Omar' }}
+          {{ userName }}
         </div>
       </div>
       <div ngbDropdownMenu

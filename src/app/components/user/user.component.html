@@ -11,7 +11,7 @@
             <th>{{ 'translate_email' | translate }}</th>
             <th>{{ 'translate_phone' | translate }}</th>
             <th>{{ 'translate_status' | translate }}</th>
-            <th>
+            <th *ngIf="authType === 'admin'">
               <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
             </th>
           </tr>
@@ -29,31 +29,124 @@
                 class="ltr:me-2 rtl:me-2"></fa-icon>
               {{ 'translate_status_' + user.status | translate }}
             </td>
-            <td class="text-center">
-              <button type="button"
-                class="inline-block rounded py-1 px-2 text-sm text-white bg-teal-600 hover:bg-teal-700 focus-within:bg-teal-700 me-2 mb-2">
+            <td *ngIf="authType === 'admin'" class="text-center">
+              <button type="button" (click)="editUser(user)"
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-teal-600 hover:bg-teal-700 focus-within:bg-teal-700 me-2 my-2">
                 <fa-icon [icon]="['far', 'edit']" class="me-2"></fa-icon>
                 {{ 'translate_edit' | translate }}
               </button>
               <button *ngIf="user.status !== 'soft_deleted'" type="button" (click)="deleteUser(user)"
-                class="inline-block rounded py-1 px-2 text-sm text-red-600 border-[1px] border-red-600 hover:bg-red-700 focus-within:bg-red-700 hover:text-white focus-within:text-white me-2 mb-2">
+                class="inline-block rounded py-1 px-2 text-sm text-red-600 border-[1px] border-red-600 hover:bg-red-700 focus-within:bg-red-700 hover:text-white focus-within:text-white me-2 my-2">
                 <fa-icon [icon]="['far', 'trash-can']" class="me-2"></fa-icon>
                 {{ 'translate_soft_delete' | translate }}
               </button>
               <button *ngIf="user.status === 'soft_deleted'" type="button" (click)="restoreUser(user)"
-                class="inline-block rounded py-1 px-2 text-sm text-white bg-green-600 hover:bg-green-700 focus-within:bg-green-700 me-2 mb-2">
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-green-600 hover:bg-green-700 focus-within:bg-green-700 me-2 my-2">
                 <fa-icon [icon]="['fas', 'arrows-rotate']" class="me-2"></fa-icon>
                 {{ 'translate_restore' | translate }}
               </button>
               <button *ngIf="user.status === 'soft_deleted'" type="button" (click)="forceDeleteUser(user)"
-                class="inline-block rounded py-1 px-2 text-sm text-white bg-red-600 hover:bg-red-700 focus-within:bg-red-700 me-2 mb-2">
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-red-600 hover:bg-red-700 focus-within:bg-red-700 me-2 my-2">
                 <fa-icon [icon]="['fas', 'xmark']" class="me-2"></fa-icon>
                 {{ 'translate_force_delete' | translate }}
               </button>
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="authType === 'admin'">
+          <tr>
+            <td colspan="5" class="bg-teal-700 text-center p-2">
+              <button type="button" (click)="createUser()"
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-green-600 hover:bg-green-700 focus-within:bg-green-700 me-2 my-2">
+                <fa-icon [icon]="['fas', 'star-of-life']" class="me-2"></fa-icon>
+                {{ 'translate_add_new_user' | translate }}
+              </button>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
 </app-layout>
+
+<ng-template #formModal let-modal>
+  <div class="modal-header flex">
+    <h4 class="modal-title flex-1">
+      {{ (edittingUser?.id ? 'translate_edit_user' : 'translate_create_user') | translate }}
+    </h4>
+    <button type="button" class="btn-close m-0" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <form [formGroup]="editForm" (ngSubmit)="submitForm(modal)">
+    <div class="modal-body">
+      <div class="relative mb-2 pb-4">
+        <label for="name" class="form-label">
+          {{ 'translate_name' | translate }}
+        </label>
+        <input type="text" formControlName="name" class="block w-full p-2 border-2 rounded outline-0" id="name"
+          [placeholder]="'translate_enter_name' | translate" autofocus
+          [ngClass]="editForm.get('name')?.invalid && editForm.get('name')?.touched ? 'border-red-500' : 'border-teal-500 hover:border-teal-800 focus-within:border-teal-800'" />
+        <div
+          *ngIf="editForm.get('name')?.touched && editForm.get('name')?.invalid && editForm.get('name')?.hasError('required')"
+          class="absolute bottom-0 text-sm text-red-500">
+          {{ 'translate_name_required' | translate }}
+        </div>
+        <div
+          *ngIf="editForm.get('name')?.touched && editForm.get('name')?.invalid && (editForm.get('name')?.hasError('minlength') || editForm.get('name')?.hasError('maxlength'))"
+          class="absolute bottom-0 text-sm text-red-500">
+          {{ 'translate_name_invalid' | translate }}
+        </div>
+      </div>
+
+      <div class="relative mb-2 pb-4">
+        <label for="email" class="form-label">
+          {{ 'translate_email' | translate }}
+        </label>
+        <input type="email" formControlName="email" class="block w-full p-2 border-2 rounded outline-0" id="email"
+          [placeholder]="'translate_enter_email' | translate"
+          [ngClass]="editForm.get('email')?.invalid && editForm.get('email')?.touched ? 'border-red-500' : 'border-teal-500 hover:border-teal-800 focus-within:border-teal-800'" />
+        <div
+          *ngIf="editForm.get('email')?.touched && editForm.get('email')?.invalid && editForm.get('email')?.hasError('required')"
+          class="absolute bottom-0 text-sm text-red-500">
+          {{ 'translate_email_required' | translate }}
+        </div>
+        <div
+          *ngIf="editForm.get('email')?.touched && editForm.get('email')?.invalid && (editForm.get('email')?.hasError('minlength') || editForm.get('email')?.hasError('maxlength'))"
+          class="absolute bottom-0 text-sm text-red-500">
+          {{ 'translate_email_invalid' | translate }}
+        </div>
+        <div
+          *ngIf="editForm.get('email')?.touched && editForm.get('email')?.invalid && (editForm.get('email')?.hasError('minlength') || editForm.get('email')?.hasError('email'))"
+          class="absolute bottom-0 text-sm text-red-500">
+          {{ 'translate_email_invalid' | translate }}
+        </div>
+      </div>
+
+      <div class="relative mb-2 pb-4">
+        <label for="phone" class="form-label">
+          {{ 'translate_phone' | translate }}
+        </label>
+        <input type="text" formControlName="phone" class="block w-full p-2 border-2 rounded outline-0" id="phone"
+          [placeholder]="'translate_enter_phone' | translate"
+          [ngClass]="editForm.get('phone')?.invalid && editForm.get('phone')?.touched ? 'border-red-500' : 'border-teal-500 hover:border-teal-800 focus-within:border-teal-800'" />
+        <div
+          *ngIf="editForm.get('phone')?.touched && editForm.get('phone')?.invalid && editForm.get('phone')?.hasError('required')"
+          class="absolute bottom-0 text-sm text-red-500">
+          {{ 'translate_phone_required' | translate }}
+        </div>
+        <div
+          *ngIf="editForm.get('phone')?.touched && editForm.get('phone')?.invalid && (editForm.get('phone')?.hasError('minlength') || editForm.get('phone')?.hasError('maxlength'))"
+          class="absolute bottom-0 text-sm text-red-500">
+          {{ 'translate_phone_invalid' | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit"
+        class="bg-teal-700 hover:bg-teal-800 focus-within:bg-teal-800 disabled:bg-teal-500 disabled:cursor-not-allowed text-white py-2 px-4 rounded"
+        [disabled]="isSubmitting">
+        <fa-icon *ngIf="isSubmitting" [icon]="['fas', 'spinner']" [animation]="'spin-pulse'" class="me-2"></fa-icon>
+        {{ (edittingUser?.id ? 'translate_update' : 'translate_create') | translate }}
+      </button>
+    </div>
+  </form>
+</ng-template>

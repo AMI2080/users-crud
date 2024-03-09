@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faCogs,
   faCheckCircle,
   faXmark,
   faArrowsRotate,
+  faSpinner,
+  faStarOfLife,
 } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan, faEdit } from '@fortawesome/free-regular-svg-icons';
 import { UserService } from '../../core/services/user.sarvice';
@@ -12,17 +14,30 @@ import { User } from '../../core/models/user.model';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-users',
   templateUrl: './user.component.html',
 })
 export class UserComponent {
+  public authType: 'user' | 'admin' | undefined;
+
   public users: User[] = [];
+
+  public editForm: FormGroup;
+
+  public edittingUser: User | null = null;
+
+  public isSubmitting: boolean = false;
 
   public constructor(
     private readonly translateService: TranslateService,
     private readonly toastr: ToastrService,
+    private readonly modalService: NgbModal,
+    readonly authService: AuthService,
     readonly userService: UserService,
     readonly fa: FaIconLibrary
   ) {
@@ -32,11 +47,38 @@ export class UserComponent {
       faEdit,
       faTrashCan,
       faXmark,
-      faArrowsRotate
+      faArrowsRotate,
+      faSpinner,
+      faStarOfLife
     );
+
+    this.authType = authService.userType;
 
     userService.get().subscribe((users) => {
       this.users = users;
+    });
+  }
+
+  public initForm(): void {
+    this.editForm = new FormGroup({
+      id: new FormControl(this.edittingUser?.id),
+      name: new FormControl(this.edittingUser?.name, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20),
+      ]),
+      email: new FormControl(this.edittingUser?.email, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(30),
+        Validators.email,
+      ]),
+      phone: new FormControl(this.edittingUser?.phone, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15),
+        Validators.pattern('[0-9]*'),
+      ]),
     });
   }
 
@@ -76,7 +118,9 @@ export class UserComponent {
       icon: 'error',
       text: this.translateService.instant('translate_force_deleting_warning'),
       showConfirmButton: true,
-      confirmButtonText: this.translateService.instant('translate_force_delete'),
+      confirmButtonText: this.translateService.instant(
+        'translate_force_delete'
+      ),
       showDenyButton: true,
       focusConfirm: true,
       denyButtonText: this.translateService.instant('translate_cancel'),
@@ -128,5 +172,54 @@ export class UserComponent {
         });
       }
     });
+  }
+
+  closeResult = '';
+
+  @ViewChild('formModal')
+  public formModal: TemplateRef<NgbActiveModal>;
+
+  public editUser(user: User): void {
+    this.edittingUser = user;
+    this.initForm();
+    this.modalService.open(this.formModal);
+  }
+
+  public createUser(): void {
+    this.edittingUser = null;
+    this.initForm();
+    this.modalService.open(this.formModal);
+  }
+
+  public submitForm(modal: NgbActiveModal): void {
+    this.editForm.markAllAsTouched();
+    if (this.editForm.valid) {
+      this.isSubmitting = true;
+      if (this.editForm.get('id')?.value) {
+        this.userService.update(this.editForm.value).subscribe((isUpdated) => {
+          if (isUpdated) {
+            this.isSubmitting = false;
+            this.toastr.success(
+              this.translateService.instant(
+                'translate_user_updated_successfully'
+              )
+            );
+            modal.close();
+          }
+        });
+      } else {
+        this.userService.create(this.editForm.value).subscribe((isUpdated) => {
+          if (isUpdated) {
+            this.isSubmitting = false;
+            this.toastr.success(
+              this.translateService.instant(
+                'translate_user_created_successfully'
+              )
+            );
+            modal.close();
+          }
+        });
+      }
+    }
   }
 }
