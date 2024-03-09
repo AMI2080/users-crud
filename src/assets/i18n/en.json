@@ -16,5 +16,15 @@
   "translate_password_required": "Password is required",
   "translate_password_invalid": "Password is invalid",
   "translate_credentials_are_invalid": "Username or Password is invalid",
+  "translate_users": "Users",
+  "translate_name": "Name",
+  "translate_email": "Email",
+  "translate_phone": "Phone",
+  "translate_status": "Status",
+  "translate_status_active": "Active",
+  "translate_status_soft_deleted": "Soft deleted",
+  "translate_edit": "Edit",
+  "translate_soft_delete": "Soft delete",
+  "translate_force_delete": "force delete",
   "translate_footer": "Copyright © {{year}} All rights reserved | Abdelrhman Mohamed"
 }

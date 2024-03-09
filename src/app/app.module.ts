@@ -25,6 +25,7 @@ import {
 } from './components/layout';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { UserComponent } from './components/user/user.component';
 
 function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/i18n/', '.json');
@@ -38,6 +39,7 @@ function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,

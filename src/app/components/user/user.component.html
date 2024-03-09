@@ -1,0 +1,54 @@
+<app-layout>
+  <div class="py-4">
+    <h2 class="text-center text-5xl font-semibold text-teal-900">
+      {{ 'translate_users' | translate }}
+    </h2>
+    <div class="overflow-x-auto py-4">
+      <table class="w-full">
+        <thead class="bg-teal-700 text-center text-white">
+          <tr class="[&_th]:p-3 [&_th]:border-e-2 [&_th:last-of-type]:border-e-0 [&_th]:border-white">
+            <th>{{ 'translate_name' | translate }}</th>
+            <th>{{ 'translate_email' | translate }}</th>
+            <th>{{ 'translate_phone' | translate }}</th>
+            <th>{{ 'translate_status' | translate }}</th>
+            <th>
+              <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="[&_tr:hover_td]:bg-black/15">
+          <tr *ngFor="let user of users" class="[&_td]:py-2 [&_td]:px-3"
+            [ngClass]="user.status === 'soft_deleted' ? 'bg-red-100 text-red-700' : '[&:nth-child(odd)]:bg-teal-200 [&:nth-child(even)]:bg-teal-300'">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+            <td class="text-center">
+              <fa-icon *ngIf="user.status === 'active'" [icon]="['fas','circle-check']"
+                class="text-teal-600 ltr:me-2 rtl:me-2"></fa-icon>
+              <fa-icon *ngIf="user.status === 'soft_deleted'" [icon]="['far','trash-can']"
+                class="ltr:me-2 rtl:me-2"></fa-icon>
+              {{ 'translate_status_' + user.status | translate }}
+            </td>
+            <td class="text-center">
+              <button type="button"
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-teal-600 hover:bg-teal-700 focus-within:bg-teal-700 me-2">
+                <fa-icon [icon]="['far', 'edit']" class="me-2"></fa-icon>
+                {{ 'translate_edit' | translate }}
+              </button>
+              <button *ngIf="user.status !== 'soft_deleted'" type="button"
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-teal-600 hover:bg-teal-700 focus-within:bg-teal-700 me-2">
+                <fa-icon [icon]="['far', 'trash-can']" class="me-2"></fa-icon>
+                {{ 'translate_soft_delete' | translate }}
+              </button>
+              <button *ngIf="user.status === 'soft_deleted'" type="button"
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-teal-600 hover:bg-teal-700 focus-within:bg-teal-700 me-2">
+                <fa-icon [icon]="['fas', 'xmark']" class="me-2"></fa-icon>
+                {{ 'translate_force_delete' | translate }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</app-layout>
