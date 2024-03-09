@@ -13,12 +13,32 @@
         </li>
       </ul>
     </div>
-    <div ngbDropdown #userMenu="ngbDropdown" class="ms-2">
+    <div ngbDropdown #langMenu="ngbDropdown" placement="bottom-end" class="ms-2">
       <div ngbDropdownToggle
-        class="rounded-full bg-teal-400 h-12 w-12 flex align-items-center cursor-pointer after:hidden"
-        [ngClass]="userMenu.isOpen() ? 'bg-teal-400' : 'bg-teal-300 hover:bg-teal-400' ">
-        <fa-icon [icon]="['far', 'user']" [size]="'2x'" [fixedWidth]="true"
+        class="rounded-full bg-teal-400 h-8 w-8 flex align-items-center cursor-pointer after:hidden"
+        [ngClass]="langMenu.isOpen() ? 'bg-teal-400' : 'bg-teal-300 hover:bg-teal-400' ">
+        <fa-icon [icon]="['fas', 'globe']" [size]="'lg'" [fixedWidth]="true"
           class="w-full text-center text-teal-900"></fa-icon>
+      </div>
+      <div ngbDropdownMenu class="bg-gray-50 shadow-sm w-8 [&_li:hover]:bg-gray-100 [&_li]:p-2 [&_li]:text-start">
+        <ul>
+          <li *ngFor="let lang of languages" [ngClass]="isCurrentLang(lang)? 'opacity-50' : 'cursor-pointer'"
+            (click)="changeLanguage(lang.key); langMenu.close()">
+            {{ lang.label| translate }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div ngbDropdown #userMenu="ngbDropdown" placement="bottom-end" class="ms-2">
+      <div ngbDropdownToggle class="flex cursor-pointer after:hidden rounded-full"
+        [ngClass]="userMenu.isOpen() ? 'bg-teal-400' : 'bg-teal-300 hover:bg-teal-400' ">
+        <div class="rounded-full bg-teal-500 h-8 w-8 flex align-items-center ltr:me-2 rtl:me-2">
+          <fa-icon [icon]="['far', 'user']" [size]="'lg'" [fixedWidth]="true"
+            class="w-full text-center text-teal-900"></fa-icon>
+        </div>
+        <div class="flex align-items-center ltr:pe-3 rtl:pe-3">
+          {{ 'Omar' }}
+        </div>
       </div>
       <div ngbDropdownMenu
         class="bg-gray-50 shadow-sm w-40 [&_li:hover]:bg-gray-100 [&_li:hover]:cursor-pointer [&_li]:p-2 [&_li]:text-start">
