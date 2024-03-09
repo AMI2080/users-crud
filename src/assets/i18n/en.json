@@ -26,5 +26,12 @@
   "translate_edit": "Edit",
   "translate_soft_delete": "Soft delete",
   "translate_force_delete": "force delete",
+  "translate_restore": "Restore",
+  "translate_cancel": "Cancel",
+  "translate_are_you_sure": "Are you sure?",
+  "translate_soft_deleting_warning": "The user will be temporarily deleted, You can undo later.",
+  "translate_restore_warning": "The user will be restored.",
+  "translate_user_deleted_successfully": "User deleted successfully",
+  "translate_user_restored_successfully": "User restored successfully",
   "translate_footer": "Copyright © {{year}} All rights reserved | Abdelrhman Mohamed"
 }
