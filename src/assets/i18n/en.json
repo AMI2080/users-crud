@@ -16,6 +16,7 @@
   "translate_password_required": "Password is required",
   "translate_password_invalid": "Password is invalid",
   "translate_credentials_are_invalid": "Username or Password is invalid",
+  "translate_display": "Display",
   "translate_users": "Users",
   "translate_name": "Name",
   "translate_email": "Email",

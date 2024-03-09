@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
+interface UserResponse {
+  result: User[];
+  limit: number;
+  page: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -30,9 +36,18 @@ export class UserService {
     },
   ];
 
-  public get(): Observable<User[]> {
+  private listLength: number = 5;
+
+  public get pagesCount(): number {
+    const max: number = Math.ceil(this.users.length / this.listLength);
+    return max > 0 ? max : 1;
+  }
+
+  public get(length: number = 5, page: number = 1): Observable<User[]> {
+    this.listLength = length;
+
     return new Observable((observer) => {
-      observer.next(this.users);
+      observer.next(this.users.slice((page - 1) * length, page * length));
     });
   }
 

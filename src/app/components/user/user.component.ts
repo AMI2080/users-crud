@@ -17,13 +17,23 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-users',
   templateUrl: './user.component.html',
 })
 export class UserComponent {
+  @ViewChild('formModal')
+  public formModal: TemplateRef<NgbActiveModal>;
+
   public authType: 'user' | 'admin' | undefined;
+
+  public listLengths: number[] = [2, 5, 10, 20, 50, 100];
+
+  public listLength: number = this.listLengths[0];
+
+  public currentPage: number = 1;
 
   public users: User[] = [];
 
@@ -33,12 +43,14 @@ export class UserComponent {
 
   public isSubmitting: boolean = false;
 
+  public pagesCount: number = 1;
+
   public constructor(
+    private readonly userService: UserService,
     private readonly translateService: TranslateService,
     private readonly toastr: ToastrService,
     private readonly modalService: NgbModal,
     readonly authService: AuthService,
-    readonly userService: UserService,
     readonly fa: FaIconLibrary
   ) {
     fa.addIcons(
@@ -53,33 +65,18 @@ export class UserComponent {
     );
 
     this.authType = authService.userType;
-
-    userService.get().subscribe((users) => {
-      this.users = users;
-    });
+    this.getUsers(this.currentPage);
   }
 
-  public initForm(): void {
-    this.editForm = new FormGroup({
-      id: new FormControl(this.edittingUser?.id),
-      name: new FormControl(this.edittingUser?.name, [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-      ]),
-      email: new FormControl(this.edittingUser?.email, [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(30),
-        Validators.email,
-      ]),
-      phone: new FormControl(this.edittingUser?.phone, [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(15),
-        Validators.pattern('[0-9]*'),
-      ]),
-    });
+  public getUsers(page: number = 1): void {
+    this.currentPage = page;
+    this.userService
+      .get(this.listLength, this.currentPage)
+      .pipe(take(1))
+      .subscribe((users) => {
+        this.users = users;
+        this.pagesCount = this.userService.pagesCount;
+      });
   }
 
   public deleteUser(user: User): void {
@@ -101,6 +98,7 @@ export class UserComponent {
       if (result.isConfirmed) {
         this.userService.delete(user.id).subscribe((isDelete) => {
           if (isDelete) {
+            this.getUsers(this.currentPage);
             this.toastr.success(
               this.translateService.instant(
                 'translate_user_temporarily_deleted_successfully'
@@ -133,6 +131,7 @@ export class UserComponent {
       if (result.isConfirmed) {
         this.userService.forceDelete(user.id).subscribe((isDelete) => {
           if (isDelete) {
+            this.getUsers(this.currentPage);
             this.toastr.success(
               this.translateService.instant(
                 'translate_user_force_deleted_successfully'
@@ -163,6 +162,7 @@ export class UserComponent {
       if (result.isConfirmed) {
         this.userService.restore(user.id).subscribe((isRestored) => {
           if (isRestored) {
+            this.getUsers(this.currentPage);
             this.toastr.success(
               this.translateService.instant(
                 'translate_user_restored_successfully'
@@ -173,11 +173,6 @@ export class UserComponent {
       }
     });
   }
-
-  closeResult = '';
-
-  @ViewChild('formModal')
-  public formModal: TemplateRef<NgbActiveModal>;
 
   public editUser(user: User): void {
     this.edittingUser = user;
@@ -198,6 +193,7 @@ export class UserComponent {
       if (this.editForm.get('id')?.value) {
         this.userService.update(this.editForm.value).subscribe((isUpdated) => {
           if (isUpdated) {
+            this.getUsers(this.currentPage);
             this.isSubmitting = false;
             this.toastr.success(
               this.translateService.instant(
@@ -208,8 +204,9 @@ export class UserComponent {
           }
         });
       } else {
-        this.userService.create(this.editForm.value).subscribe((isUpdated) => {
-          if (isUpdated) {
+        this.userService.create(this.editForm.value).subscribe((isCreated) => {
+          if (isCreated) {
+            this.getUsers(this.currentPage);
             this.isSubmitting = false;
             this.toastr.success(
               this.translateService.instant(
@@ -221,5 +218,28 @@ export class UserComponent {
         });
       }
     }
+  }
+
+  private initForm(): void {
+    this.editForm = new FormGroup({
+      id: new FormControl(this.edittingUser?.id),
+      name: new FormControl(this.edittingUser?.name, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20),
+      ]),
+      email: new FormControl(this.edittingUser?.email, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(30),
+        Validators.email,
+      ]),
+      phone: new FormControl(this.edittingUser?.phone, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15),
+        Validators.pattern('[0-9]*'),
+      ]),
+    });
   }
 }
