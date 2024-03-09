@@ -50,6 +50,20 @@ export class UserService {
     });
   }
 
+  public forceDelete(userId: number): Observable<boolean> {
+    return new Observable((observer) => {
+      const userIndex: number = this.users.findIndex(
+        (user) => user.id === userId && user.status === 'soft_deleted'
+      );
+      if (userIndex >= 0) {
+        this.users.splice(userIndex, 1);
+        observer.next(true);
+      } else {
+        observer.next(false);
+      }
+    });
+  }
+
   public restore(userId: number): Observable<boolean> {
     return new Observable((observer) => {
       const user: User = this.users.find(

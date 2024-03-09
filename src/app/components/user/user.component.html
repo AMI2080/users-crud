@@ -31,22 +31,22 @@
             </td>
             <td class="text-center">
               <button type="button"
-                class="inline-block rounded py-1 px-2 text-sm text-white bg-teal-600 hover:bg-teal-700 focus-within:bg-teal-700 me-2">
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-teal-600 hover:bg-teal-700 focus-within:bg-teal-700 me-2 mb-2">
                 <fa-icon [icon]="['far', 'edit']" class="me-2"></fa-icon>
                 {{ 'translate_edit' | translate }}
               </button>
               <button *ngIf="user.status !== 'soft_deleted'" type="button" (click)="deleteUser(user)"
-                class="inline-block rounded py-1 px-2 text-sm text-red-600 border-[1px] border-red-600 hover:bg-red-700 focus-within:bg-red-700 hover:text-white focus-within:text-white me-2">
+                class="inline-block rounded py-1 px-2 text-sm text-red-600 border-[1px] border-red-600 hover:bg-red-700 focus-within:bg-red-700 hover:text-white focus-within:text-white me-2 mb-2">
                 <fa-icon [icon]="['far', 'trash-can']" class="me-2"></fa-icon>
                 {{ 'translate_soft_delete' | translate }}
               </button>
               <button *ngIf="user.status === 'soft_deleted'" type="button" (click)="restoreUser(user)"
-                class="inline-block rounded py-1 px-2 text-sm text-white bg-green-600 hover:bg-green-700 focus-within:bg-green-700 me-2">
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-green-600 hover:bg-green-700 focus-within:bg-green-700 me-2 mb-2">
                 <fa-icon [icon]="['fas', 'arrows-rotate']" class="me-2"></fa-icon>
                 {{ 'translate_restore' | translate }}
               </button>
-              <button *ngIf="user.status === 'soft_deleted'" type="button"
-                class="inline-block rounded py-1 px-2 text-sm text-white bg-red-600 hover:bg-red-700 focus-within:bg-red-700 me-2">
+              <button *ngIf="user.status === 'soft_deleted'" type="button" (click)="forceDeleteUser(user)"
+                class="inline-block rounded py-1 px-2 text-sm text-white bg-red-600 hover:bg-red-700 focus-within:bg-red-700 me-2 mb-2">
                 <fa-icon [icon]="['fas', 'xmark']" class="me-2"></fa-icon>
                 {{ 'translate_force_delete' | translate }}
               </button>

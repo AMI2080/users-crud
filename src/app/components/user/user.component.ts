@@ -61,7 +61,37 @@ export class UserComponent {
           if (isDelete) {
             this.toastr.success(
               this.translateService.instant(
-                'translate_user_deleted_successfully'
+                'translate_user_temporarily_deleted_successfully'
+              )
+            );
+          }
+        });
+      }
+    });
+  }
+
+  public forceDeleteUser(user: User): void {
+    Swal.fire({
+      title: this.translateService.instant('translate_are_you_sure'),
+      icon: 'error',
+      text: this.translateService.instant('translate_force_deleting_warning'),
+      showConfirmButton: true,
+      confirmButtonText: this.translateService.instant('translate_force_delete'),
+      showDenyButton: true,
+      focusConfirm: true,
+      denyButtonText: this.translateService.instant('translate_cancel'),
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'btn btn-danger me-2',
+        denyButton: 'btn btn-outline-success',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.forceDelete(user.id).subscribe((isDelete) => {
+          if (isDelete) {
+            this.toastr.success(
+              this.translateService.instant(
+                'translate_user_force_deleted_successfully'
               )
             );
           }
